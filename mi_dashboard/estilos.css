@@ -1,0 +1,30 @@
+body{
+    color:#333333;
+    font-family: Verdana;
+    font-size: 8pt;
+}
+
+table{
+    border-collapse: collapse;
+}
+	  
+td{
+    padding-left:5px;
+    padding-right:5px;
+    border-style:solid;
+    border-width:1px;
+    border-color:#6699cc;
+}
+	
+.fila_encabezado{
+    background-color:#e0f0ff;
+    font-weight:bold;
+}
+	
+tr:nth-child(odd){
+    background-color:white;
+}
+	
+tr:nth-child(even){
+    background-color:#f4f4f4;
+}

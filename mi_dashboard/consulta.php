@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang='es'>
 	<head>
-		<title>Ejemplo de consulta a BD northwind con MySQL</title>
+		<title>DASHBOARD</title>
 		<meta charset="utf-8" />
         <link rel="stylesheet" href="estilos.css" />
 	</head>
@@ -119,21 +119,28 @@
 					exit;
 				};
 				
+				//imprimo el titulo
 				echo "<H1>".$titulos[$contador]."</H1>";
 
 				crearTabla($resultado);
+				
+				//La primer tabla no necesita grafica
 				if($contador != 0){
 					
+					//en el primer arreglo guardo cadenas
 					$col1 = array();
+					//y en el segundo los valores numericos
 					$col2 = array();
 
 					//extraigo cada fila del resultado de la consulta
 					while($fila=mysqli_fetch_array($res, MYSQLI_NUM)){
-						//guardo cada el valor de cada columna en arrays distintos
+
+						//guardo cada  valor de cada columna en arrays correspondientes
 						$col1[] = $fila[0];
 						$col2[] = $fila[1];
 					};
 
+					//convierto ambos arrays en string
 					$col1 = implode("|", $col1);
 					$col2 = implode("|", $col2);
 

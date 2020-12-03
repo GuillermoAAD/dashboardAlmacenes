@@ -3,8 +3,6 @@
 
     function generarImagen()
     {
-        header('Content-Type: text/html; charset=UTF-8');
-
         // Recuperar datos
         $titulo = $_GET['titulo'];
         $col1 = $_GET['col1'];
@@ -13,50 +11,60 @@
         // Convierte las cadenas a arrays
         $array1 = explode('|', $col1);
         $array2 = array_map('intval', explode('|', $col2));
-        $numElementos = count($array1);
+        $array2String = explode('|', $col2);
 
-        // Crear una imagen de 500 x se ajusta automatico alnumero de elementos
-        $lienzo = imagecreatetruecolor(500, $numElementos *20 + 70);
+        $numElementos = count($array1);
+        $valMax = max($array2);
+
+        //guarda el largo donde se dinuja la grafica
+        $largoLienzo = 500;
+
+        // Crear una imagen de 500 x se ajusta automatico al numero de elementos
+        $lienzo = imagecreatetruecolor($largoLienzo, $numElementos *20 + 70);
         
         // Asignar colores
         $blanco = imagecolorallocate($lienzo, 255, 255, 255);
-        $rosa = imagecolorallocate($lienzo, 255, 105, 180);
-        $verde = imagecolorallocate($lienzo, 132, 135, 28);
-        $gris = imagecolorallocate($lienzo, 64, 64, 64);
-        $grisClaro = imagecolorallocate($lienzo, 213, 213, 213);
         $negro = imagecolorallocate($lienzo, 0, 0, 0);
+        $azulClaro = imagecolorallocate($lienzo, 142, 205, 233);        
 
         // Inicializa el fondo del lienzo a blanco	
-        imagefill($lienzo, 0, 0, $grisClaro);
+        imagefill($lienzo, 0, 0, $blanco);
         
         // Imprimir el titulo de la grafica
-        imagestring($lienzo, 6, 25, 10, $titulo, $negro);
+        imagestring($lienzo, 6, 25, 10, "Grafica: ".$titulo, $negro);
 
         //valores iniciales de x, y
         $x = 50;
         $y = 50;
 
         for ($i = 0; $i < $numElementos; $i++) {
+
+            //Calculo el largo que tendra el elemento en la grafica y
+            //descuento el espaciado de los dos lados
+            $x2 = obtenerLargoGrafica($array2[$i], $valMax, $largoLienzo-100);
+            //le sumo 50 porque es el espaciado izquierdo que ledi
+            $x2 += 50;
+
             //dibuja rectangulo de la grafica
-            imagerectangle($lienzo, $x, $y, $x+100, $y+20, $rosa);
+            imagefilledrectangle($lienzo, $x2, $y, $x, $y+20, $azulClaro);
+            imagerectangle($lienzo, $x2, $y, $x, $y+20, $blanco);
             
-            //dibuja el primer dato
-            imagestring($lienzo, 2, $x+2, $y+2, $array1[$i]." : ".$array2[$i], $negro);
+            //dibuja los datos
+            imagestring($lienzo, 2, $x+2, $y+2, $array1[$i]." : $ ".$array2String[$i], $negro);
+
+            //incremento y para que se dibuje la siguiente barra abajo
             $y += 20;
         }
 
-
-       // imagestring($lienzo, 6, 25, 10, $col1, $negro);
-        
-        // Dibujar tres rectángulos, cada uno con su color
-      // imagerectangle($lienzo, 50, 50, 100, 100, $rosa);
-        //imagerectangle($lienzo, 100, 100, 150, 150, $verde);
-        //imagerectangle($lienzo, 150, 150, 200, 200, $gris);
-        
         // Imprimir y liberar memoria
         header('Content-Type: image/jpeg');
         
         imagejpeg($lienzo);
         imagedestroy($lienzo);
+    }
+
+    //Calculo el tamaño/longitud de la grafica para el elemento
+    function obtenerLargoGrafica($val, $valMax, $tamanioCanvas) {
+        return ($val / $valMax) * $tamanioCanvas;
     }
 ?>
